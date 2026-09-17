@@ -1,295 +1,168 @@
-# Agri Microclimate Agent — FortyGuard Hackathon '26
+# 🌱 Agricultural Microclimate Agent
 
-[![FortyGuard Hackathon '26](https://img.shields.io/badge/FortyGuard%20Hackathon-'26%20Submission-2E9F45?style=for-the-badge&logo=sprout)](https://api.fortyguard.com)
-[![Python 3.10+](https://img.shields.io/badge/Python-3.10+-176B35?style=for-the-badge&logo=python)](https://www.python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.110.0-009688?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com)
-[![React + Vite](https://img.shields.io/badge/React-18.2--Vite-61DAFB?style=for-the-badge&logo=react)](https://vitejs.dev)
-[![Tests](https://img.shields.io/badge/Tests-45%2F45%20Passing-2E9F45?style=for-the-badge)](tests/)
+An AI-powered agricultural decision-support system that analyzes environmental conditions and crop-specific agronomic knowledge to provide explainable microclimate risk assessments and actionable field recommendations.
 
-**Agri Microclimate Agent** is an autonomous agricultural microclimate decision engine designed for farmers, agronomists, and irrigation managers. It combines parcel-scale thermal surface grids from **FortyGuard**, satellite reanalysis climatology from **NASA POWER**, and grounded agronomic research extension guides from **UC Davis, TAMU, and USDA** to generate explainable, citation-backed heat risk assessments and multi-step field action plans.
+Built for the **FortyGuard Hackathon '26**.
 
 ---
 
-## 🌟 Key Platform Features
+## 🚀 Overview
 
-### 1. Multi-Source Environmental Data Fusion
-- **FortyGuard Thermal API**: Parcel-scale (60m–100m tile resolution) thermal surface heatmaps, measuring daily mean, peak exceedances, and thermal persistence statistics over a ~7 km × 7 km field AOI automatically generated around the user's pinned farm location.
-- **NASA POWER Satellite Climatology**: Daily precipitation (`PRECTOTCORR`), root-zone soil wetness index (`GWETROOT`), and relative humidity (`RH2M`) for deep moisture and drought context.
-- **US Census Geocoder**: Lightweight, high-reliability geocoding service converting city/address locations into exact field latitude/longitude coordinates.
+The **Agricultural Microclimate Agent** combines real-time environmental data, satellite climate information, and **RAG-based agricultural knowledge** to help farmers and agronomists understand heat and moisture-related risks affecting crops.
 
-### 2. Grounded Vector RAG & Crop Knowledge Store
-- **5 Major US Crop Knowledge Bases**: Indexed extension research for **Tomato**, **Almond**, **Corn**, **Grape**, and **Cotton**.
-- **Crop Scope Guard**: Hardened RAG retrieval layer ensuring no cross-crop citation leakage occurs (e.g., almond stress thresholds will never be cited for tomato assessments).
-- **Extension Citation Traceability**: Every recommendation and threshold boundary links directly back to a verified publication chunk ID.
+The system uses an **agentic architecture** that dynamically selects the required tools, retrieves relevant crop-specific evidence, evaluates environmental conditions, and generates grounded recommendations.
 
-### 3. Autonomous Agentic Orchestration Architecture
-- **Natural Language Goal Parser**: Deterministically parses crop, growth stage, location name, coordinates, and historical context flags.
-- **Dynamic Planner**: Sequences only the required tools per query (`GeocodingTool`, `AgronomicEvidenceTool`, `FortyGuardTool`, `NasaPowerTool`) rather than running a rigid pipeline.
-- **Evidence Sufficiency Gate**: Compares live environmental observations against parsed agronomic thresholds. If runtime data is missing or incompatible, the agent outputs `INSUFFICIENT_EVIDENCE` instead of hallucinating speculative risk levels.
-- **Full Audit Logger**: Records every tool step, payload, and API status in a safe, non-leaking user-facing execution trace.
+### Supported Crops
+
+* 🍅 Tomato
+* 🌰 Almond
+* 🌽 Corn
+* 🍇 Grape
+* 🌱 Cotton
 
 ---
 
-## 🎨 Commercial Web Dashboard (Phase 5 Visual Identity & Custom Artwork)
+## 🧠 AI & RAG Architecture
 
-The frontend features a commercial-grade agricultural SaaS user interface reverse-engineered from premium AgriTech design principles:
+The system is built around three main layers:
 
-- **Organic Green Brushstroke Artwork**: Custom vertical green paint brush background artwork (`RealWhiteBrushBackground.jsx`) creating a distinct, high-end organic brand aesthetic.
-- **Glassmorphic Navigation Bar**: High-contrast dark emerald glass topbar (`rgba(8, 28, 22, 0.86)`) with `backdrop-filter: blur(20px)`, emerald glow borders, and crystal-clear white active tab styling (`#FFFFFF`).
-- **High-Resolution Crop Photography**: Real agricultural field photography for **Tomato**, **Almond**, **Corn**, **Grape**, and **Cotton** knowledge base cards.
-- **Fresh Agricultural Design Tokens**: Primary Emerald Green (`#10B981`), Deep Forest Green (`#047857`), Fresh Mint (`#34D399`), and Deep Organic Background (`#0E3529`).
-- **Typography Pairings**: Google Font `Inter` for primary UI hierarchy and `JetBrains Mono` for tabular numerical metrics, coordinates, and units.
-- **Card Depth & Motion Language**: Elevated glass cards with soft ambient green shadows, hover lift (`translateY(-4px)`), and 3D card flip transitions.
-- **BrandIntro Splash Screen**: Translucent backdrop blur (`backdrop-filter: blur(20px)`), blur-to-sharp logo reveal, and `sessionStorage` single-play memory (`agri_intro_played`) so the splash executes once per browser session.
-- **21st.dev Metric Cards**: Integrated `MetricCard21st` components for environmental observation displays.
-- **Interactive Leaflet Map Pin Selector**: Drag-and-drop map pin selector allowing growers to click directly on field locations.
-- **4-Step Decision Console (`/analyze`)**: Structured form workflow (`STEP 01` Field Location -> `STEP 02` Crop & Stage -> `STEP 03` Goal -> `STEP 04` Execute).
-- **4-Tab Decision Report (`/results`)**: Organized decision dashboard (`OVERVIEW`, `EVIDENCE`, `ACTIONS`, `AGENT TRACE`) with risk verdict banners and actionable mitigation steps.
+### Environmental Data Fusion
 
----
+Combines multiple sources to build a field-level environmental profile:
 
-## 🔒 FortyGuard Data Compliance & API Governance
+* **FortyGuard** — Thermal surface data and heat statistics
+* **NASA POWER** — Precipitation, soil moisture, and humidity data
+* **US Census Geocoder** — Location and coordinate resolution
 
-This project adheres strictly to **FortyGuard Intellectual Property & Data Licensing Guidelines**:
+### 🌾 Grounded RAG Knowledge System
 
-1. **Live On-Demand API Integration**:
-   The application communicates with the FortyGuard tOS Enterprise API (`https://api.fortyguard.com`) dynamically at runtime. All thermal surface heatmaps, statistics, and parcel metrics are fetched live upon user query execution.
+A crop-specific knowledge base built from agricultural extension publications.
 
-2. **Zero Raw Dataset Redistribution**:
-   In compliance with FortyGuard IP rules, **no raw downloaded FortyGuard heatmap tiles, raster datasets, or proprietary spatial files are committed or redistributed in this repository**. All raw spatial data is kept out of version control via `.gitignore`.
+* Vector-based document retrieval
+* Crop-specific retrieval filtering
+* Evidence-based recommendations
+* Citation traceability
+* Protection against cross-crop knowledge leakage
 
-3. **Secure API Key Management**:
-   API keys (`FORTYGUARD_API_KEY`) are managed strictly server-side via environment variables (`.env`) and are never exposed in repository commits or client-side JavaScript assets.
+### 🤖 Agentic Decision Engine
 
-4. **Example FortyGuard API Data Contract**:
-   Below is a sample request payload and redacted response shape illustrating the client integration:
+An autonomous orchestration layer that:
 
-```json
-// POST /v1/heatmap
-// Header: api-key: fg_live_xxxxxxxxxxxxxxxx
-// Content-Type: application/json
-{
-  "polygon_aoi": {
-    "type": "FeatureCollection",
-    "features": [{
-      "type": "Feature",
-      "properties": {},
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-          [-112.074, 33.448],
-          [-112.060, 33.448],
-          [-112.060, 33.458],
-          [-112.074, 33.458],
-          [-112.074, 33.448]
-        ]]
-      }
-    }]
-  },
-  "date_time": {
-    "start_date": "2025-07-15",
-    "start_time": "14:00",
-    "filter_type": 1
-  },
-  "granularity": 100,
-  "analytic_type": "tcm"
-}
+1. Parses the user's agricultural goal.
+2. Identifies the required data sources.
+3. Dynamically selects the appropriate tools.
+4. Retrieves relevant agronomic evidence.
+5. Compares environmental observations with crop-specific thresholds.
+6. Produces an explainable risk assessment.
+7. Generates actionable recommendations.
+8. Provides an execution trace for transparency.
 
-// Response (Redacted/Sample Payload for Documentation)
-{
-  "status": "completed",
-  "activity_id": "act_sample_789412",
-  "result": {
-    "stats_data": {
-      "analytic_type": "tcm",
-      "mean": 38.4,
-      "min": 35.2,
-      "max": 42.1,
-      "n_cells": 847,
-      "units": "fahrenheit"
-    }
-  }
-}
-```
+If the available evidence is insufficient, the system returns **`INSUFFICIENT_EVIDENCE`** instead of generating unsupported conclusions.
 
 ---
 
-## 🚀 Quickstart & Setup Guide
+## 🖥️ Web Dashboard
 
-### Prerequisites
-- **Python 3.10+** (for FastAPI backend & Python SDK)
-- **Node.js 18+ & npm** (for React + Vite frontend dashboard)
-- A valid **FortyGuard API Key**
+The project includes a modern agricultural dashboard built with **React + Vite**, providing:
 
----
+* 📍 Interactive field location selection
+* 🌱 Crop and growth-stage selection
+* 📊 Environmental metrics
+* 🌡️ Heat-risk assessment
+* 📚 Evidence and source references
+* 💡 Recommended field actions
+* 🤖 Agent execution trace
 
-### 1. Clone & Environment Setup
+The decision workflow is organized into:
 
-```bash
-git clone https://github.com/Mohanad06/agri-microclimate-agent.git
-cd agri-microclimate-agent
-
-# Create & activate virtual environment
-python -m venv venv
-# Windows
-venv\Scripts\activate
-# macOS / Linux
-source venv/bin/activate
-
-# Install Python dependencies
-pip install -r requirements.txt
-```
-
-### 2. Configure Environment Variables
-
-Copy `.env.example` to `.env` in the root directory:
-
-```bash
-cp .env.example .env
-```
-
-Paste your FortyGuard API credentials into `.env`:
-
-```env
-FORTYGUARD_API_KEY=fg_live_xxxxxxxxxxxxxxxx
-FORTYGUARD_BASE_URL=https://api.fortyguard.com
-```
+**Field Location → Crop & Stage → Goal → Analysis → Decision Report**
 
 ---
 
-### 3. Run the Backend API Server (FastAPI)
+## 🛠️ Tech Stack
 
-In your main terminal window:
-
-```bash
-python -m uvicorn app.main:app --reload
-```
-
-- **Backend REST API**: `http://127.0.0.1:8000`
-- **Swagger Interactive API Docs**: `http://127.0.0.1:8000/docs`
-- **API Health Check**: `http://127.0.0.1:8000/health`
-
----
-
-### 4. Run the Web Dashboard Frontend (React + Vite)
-
-Open a **second terminal window** and navigate to `frontend/`:
-
-```bash
-cd agri-microclimate-agent/frontend
-
-# Install npm dependencies (first time setup)
-npm install
-
-# Launch Vite development server
-npm run dev
-```
-
-- **Web Dashboard Application**: **`http://localhost:5173`**
+| Category   | Technologies                         |
+| ---------- | ------------------------------------ |
+| AI / ML    | Python, Machine Learning             |
+| RAG        | Vector Retrieval, Knowledge Base     |
+| Agent      | Agentic Workflow, Tool Orchestration |
+| Backend    | FastAPI                              |
+| Frontend   | React, Vite                          |
+| Data       | FortyGuard, NASA POWER               |
+| Geospatial | Leaflet, US Census Geocoder          |
+| Testing    | Python Unit & Integration Tests      |
 
 ---
 
-## 🧪 Testing & Verification
+## 🧪 Testing
 
-The project maintains a full automated unit and integration test suite covering site profiles, geocoding, NASA POWER reanalysis, vector RAG retrieval, crop scope guards, and agent decision orchestration.
+The system includes automated tests covering:
 
-To run the complete test suite:
+* Agent orchestration
+* RAG retrieval
+* Crop scope validation
+* Geocoding
+* NASA POWER integration
+* FortyGuard services
 
-```bash
-python -m unittest discover -s tests
-```
+**45/45 tests passing** across the complete test suite.
 
-### Test Suite Results
+---
+
+## 🏗️ Architecture
 
 ```text
-======================================================================
-Ran 45 tests in 2.14s
-
-OK (45/45 passing, 0 failures, 0 errors)
-```
-
-| Test Module | Tests | Status |
-|---|---|---|
-| FortyGuard & Site Profile (`fortyguard/test_site_profile.py`) | 8 | ✅ ALL PASS |
-| Geocoding Unit Tests (`fortyguard/test_geocoding.py`) | 5 | ✅ ALL PASS |
-| NASA POWER Unit Tests (`fortyguard/test_nasa_power.py`) | 7 | ✅ ALL PASS |
-| RAG Vector Store Tests (`tests/test_rag.py`) | 7 | ✅ ALL PASS |
-| Agent Orchestration Tests (`tests/test_agent.py`) | 18 | ✅ ALL PASS |
-| **Total Test Suite** | **45** | **✅ 45 PASSING** |
-
----
-
-## 📂 Project Architecture & Repository Layout
-
-```text
-agri-microclimate-agent/
-│
-├── agent/                        # Autonomous Agentic Orchestration Layer
-│   ├── decision.py               # EvidenceParser + DecisionLayer (sufficiency gate)
-│   ├── goal_parser.py            # Natural language goal parser
-│   ├── orchestrator.py           # AgentOrchestrator (central execution loop)
-│   ├── planner.py                # Dynamic tool sequencer
-│   ├── tool_registry.py          # ToolResult, BaseTool, concrete wrappers, registry
-│   └── trace.py                  # AuditLogger (safe user-facing execution trace)
-│
-├── app/                          # FastAPI Backend Application Server
-│   ├── main.py                   # FastAPI REST endpoints (/health, /crops, /analyze)
-│   └── schemas.py                # Pydantic request/response payload schemas
-│
-├── data/
-│   ├── knowledge_base/           # Extension research markdown documents
-│   └── knowledge_store.json      # TF-IDF vector index
-│
-├── docs/                         # Architecture & Specification Documents
-│   ├── BACKEND_DESIGN.md
-│   ├── FRONTEND_DESIGN.md
-│   ├── GOALS.md
-│   ├── PROJECT_STATE.md
-│   └── UI_UX_ARCHITECTURE.md
-│
-├── fortyguard/                   # FortyGuard Client & Meteorological Services
-│   ├── client.py                 # FortyGuardClient API wrapper
-│   ├── geocoding.py              # US Census Geocoder wrapper
-│   ├── nasa_power.py             # NASA POWER satellite reanalysis service
-│   └── site_profile.py           # Data normalization & SiteProfile builders
-│
-├── frontend/                     # Commercial React + Vite Web Dashboard
-│   ├── src/
-│   │   ├── api/agentApi.js       # Axios API client
-│   │   ├── components/
-│   │   │   ├── common/           # Header, BrandIntro, StatusPill, LoadingSpinner
-│   │   │   ├── form/             # AnalysisForm, CropSelect, MapPinSelector
-│   │   │   ├── map/              # InteractiveMap (Leaflet)
-│   │   │   ├── results/          # RiskBanner, FindingsGrid, MetricCard21st, RecommendationsList, SourcesList
-│   │   │   └── trace/            # AgentActivityTrace, AuditTraceModal
-│   │   ├── hooks/useAgent.js     # Central state & backend integration hook
-│   │   ├── pages/                # DashboardPage, AnalyzePage, ResultsPage, AgentIntelligencePage
-│   │   ├── App.css               # Commercial AgriTech component stylesheet
-│   │   ├── App.jsx               # Client-side router & App shell
-│   │   └── index.css             # Light-first agricultural design system tokens
-│   └── package.json
-│
-├── knowledge/                    # Vector RAG Engine
-│   ├── evidence_tool.py          # Crop Scope Guard + evidence retrieval contract
-│   ├── ingest.py                 # Markdown document parser & chunker
-│   └── vector_store.py           # Vector database implementation
-│
-├── notebooks/                    # Jupyter Walkthrough & Use-Case Notebooks
-│
-├── tests/                        # Automated Unit & Integration Test Suite
-│   ├── test_agent.py
-│   └── test_rag.py
-│
-├── .env.example
-├── LICENSE
-├── README.md
-└── requirements.txt
+User Query
+    │
+    ▼
+Goal Parser
+    │
+    ▼
+Dynamic Agent Planner
+    │
+    ├──────────────► Geocoding
+    │
+    ├──────────────► FortyGuard Thermal Data
+    │
+    ├──────────────► NASA POWER
+    │
+    └──────────────► Crop-Specific RAG
+                          │
+                          ▼
+                   Evidence & Thresholds
+                          │
+                          ▼
+                   Decision Engine
+                          │
+                          ▼
+              Risk Assessment + Actions
+                          │
+                          ▼
+                   Web Dashboard
 ```
 
 ---
 
-## 📜 License & Acknowledgments
+## 🎯 Key Highlights
 
-This project is open-source under the **MIT License**.
+* **Agentic AI** for dynamic decision-making
+* **RAG** for grounded agricultural knowledge
+* **Multi-source environmental data fusion**
+* **Crop-specific evidence retrieval**
+* **Explainable risk assessment**
+* **Citation-backed recommendations**
+* **Insufficient-evidence protection**
+* **Full agent execution tracing**
+* **Interactive agricultural dashboard**
 
-Built for the **FortyGuard Hackathon '26**. Special thanks to the FortyGuard team for providing access to the FortyGuard tOS Enterprise API, NASA POWER for satellite reanalysis data, and UC Davis, Texas A&M AgriLife, and USDA Agricultural Research Service for agronomic extension publications.
+---
+
+## 🏆 Hackathon Project
+
+Developed for the **FortyGuard Hackathon '26**, focusing on applying AI agents, RAG, environmental intelligence, and modern web technologies to agricultural decision support.
+
+---
+
+### 👨‍💻 Project Focus
+
+**Artificial Intelligence · RAG · AI Agents · Environmental Data · Agriculture · Decision Support**
